@@ -1,37 +1,75 @@
 <?php
     require_once 'app/controller/api.controller.php';
-    require_once 'app/model/news.model.php';
+    require_once 'app/model/news.api.model.php';
 
     class NewsApiController extends ApiController {
         private $model;
-
+        
         function __construct() {
             parent::__construct();
-            $this->model = new NewsModel();
+            $this->model = new NewsApiModel();
+            $this->view = new ApiView();
         }
 
-        function get($params = []) {
-            
-            if (empty($params)){
-                $news = $this->model->getNews();
-                $this->view->response($news, 200);
-            } else {
-                $news = $this->model->getNewsById($params[':ID']);
-                if(!empty($news)) {
-                    $this->view->response($news, 200);
-                }else{
-                    $this->view->response(
-                        'La tarea con el id='.$params[':ID'].' no existe.'
-                        , 404);
+        function getAll($params = null) {
+           
+            try {
+                $column =  $_GET["column"] ?? null;
+                $filtervalue = $_GET["filtervalue"] ?? null;
+                $orderBy = $_GET["orderBy"] ?? "id";
+                $order = $_GET["order"] ?? "desc";
+                $limit = $_GET["limit"] ?? 4;
+                $page =  $_GET["page"] ?? 1;
+        
+        
+                $newss = $this->model->getNews($column, $filtervalue, $orderBy, $order, $limit, $page);
+        
+        
+                if ($newss) {
+                $this->view->response($newss, 200);
+                } else {
+                $this->view->response("No se encontraron noticias.", 204);
+                $this->view->response("Puede realizar una nueva busqueda.", 205);
                 }
-                
+            } catch (Exception $e) {
+                $this->view->response($e->getMessage(), 500);
+            } 
+           
+        }
+
+        public function get($params = null){
+            $id = $params[':ID'];
+            $news = $this->model->getNewsById($id);
+
+            if ($news)
+            $this->view->response($news);
+            else{
+                $this->view->response("La noticia solicitada con id= $id no existe", 404);
+            }
+            
+        }
+
+
+
+        public function createNews($params = null){
+            $news = $this->getData();
+
+
+            if (empty($news->titulo) || empty($news->contenido) || empty($news->fecha) || empty($news->hora) || empty($news->id_seccion) ) {
+            $this->view->response("Debe completar todos los datos", 400);
+            } else {
+
+                if (empty($this->model->getNewsById($news->id))) {
+                    $this->model->insertNews($news->titulo, $news->contenido, $news->fecha, $news->hora, $news->id_seccion);
+                $added = $this->model->getNewsById($news->id);
+                $this->view->response($added, 201);
+                } else {
+                $this->view->response("La noticia ya se encuentra ingresada", 400);
+                }
+
             }
         }
 
-
-        function create($params = []) {
-    
-        }
 
         function update($params = []) {
             $id = $params[':ID'];

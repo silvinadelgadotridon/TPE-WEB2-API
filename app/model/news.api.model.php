@@ -3,17 +3,34 @@
 require_once 'model.php';
 
 #Se extiende la clase model que hereda propiedades y metodos de Model
-class NewsModel extends Model{
+class NewsApiModel extends Model{
     #se borró private db porque ya esta definida en la clase Model
     #se borró la funcion construct
-    
-    function getNews() {
-        $query = $this->db->prepare('SELECT * FROM noticias');
-        $query->execute();
-        $newss = $query->fetchAll(PDO::FETCH_OBJ);
+    public function getNews($column, $filtervalue, $orderBy, $order, $limit, $page)
+    {
 
+        $params = [];
+
+
+        $offset = $page * $limit - $limit;
+
+        $querySentence = "SELECT * FROM noticias ";
+
+        if ($column != null) {
+            //aca tengo que ver si el $filter
+            $querySentence .= " WHERE  $column LIKE ? ";
+            array_push($params, "$filtervalue%");
+        }
+
+        $querySentence .= "ORDER BY $orderBy $order LIMIT $limit OFFSET $offset";
+
+
+        $query = $this->db->prepare($querySentence);
+        $query->execute($params);
+        $newss = $query->fetchAll(PDO::FETCH_OBJ);
         return $newss;
     }
+
 
     function insertNews($title, $content, $date, $hour, $id_section) {
         $query = $this->db->prepare('INSERT INTO noticias(titulo, contenido, fecha, hora, id_seccion) VALUES(?,?,?,?,?)');

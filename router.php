@@ -6,8 +6,8 @@
     $router = new Router();
 
     #                 endpoint      verbo     controller           método
-    $router->addRoute('noticias',     'POST',   'NewsApiController', 'create');
-    $router->addRoute('noticias',     'GET',    'NewsApiController', 'get'   ); # TaskApiController->get($params)
+    $router->addRoute('noticias',     'POST',   'NewsApiController', 'createNews');
+    $router->addRoute('noticias',     'GET',    'NewsApiController', 'getAll'   ); # NewsApiController->get($params)
     $router->addRoute('noticias/:ID', 'GET',    'NewsApiController', 'get'   );
     $router->addRoute('noticias/:ID', 'PUT',    'NewsApiController', 'update');
     
