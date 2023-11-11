@@ -33,7 +33,8 @@ class Model
                   `contenido` text NOT NULL,
                   `fecha` varchar(20) NOT NULL,
                   `hora` time NOT NULL,
-                  `id_seccion` int(11) NOT NULL
+                  `id_seccion` int(11) NOT NULL,
+                  `comentarios` varchar(200) NULL
                 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
                 
                 --
