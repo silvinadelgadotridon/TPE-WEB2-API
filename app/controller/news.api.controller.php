@@ -93,4 +93,6 @@ class NewsApiController extends ApiController
             $this->view->response('La noticia no existe.', 404);
         }
     }
+
+
 }
