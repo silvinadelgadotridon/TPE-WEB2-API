@@ -26,10 +26,9 @@
         
         
                 if ($newss) {
-                $this->view->response($newss, 200);
+                    $this->view->response($newss, 200);
                 } else {
-                $this->view->response("No se encontraron noticias.", 204);
-                $this->view->response("Puede realizar una nueva busqueda.", 205);
+                    $this->view->response("No se encontraron noticias.", 404);
                 }
             } catch (Exception $e) {
                 $this->view->response($e->getMessage(), 500);
