@@ -22,7 +22,7 @@ class NewsApiModel extends Model{
             array_push($params, "$filtervalue%");
         }
 
-        $querySentence .= "ORDER BY $orderBy $order LIMIT $limit OFFSET $offset";
+        $querySentence .= " ORDER BY $orderBy $order LIMIT $limit OFFSET $offset";
 
 
         $query = $this->db->prepare($querySentence);
@@ -36,7 +36,6 @@ class NewsApiModel extends Model{
         $query = $this->db->prepare('INSERT INTO noticias(titulo, contenido, fecha, hora, id_seccion) VALUES(?,?,?,?,?)');
         $query->execute([$title, $content, $date, $hour, $id_section]);
         return $this->db->lastInsertId();
-        
     }
 
     function updateNews($id, $title, $content, $date, $hour, $sectionID){
