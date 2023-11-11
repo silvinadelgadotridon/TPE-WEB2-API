@@ -1,16 +1,25 @@
 <?php
 
-require './config.php';
+require_once './config.php';
 class Model
 {
   protected $db;
+  private $hash;
 
   function __construct()
   {
-    $this->db = new PDO('mysql:host='. MYSQL_HOST .';dbname='. MYSQL_DB .';charset=utf8', MYSQL_USER, MYSQL_PASS);
+    $this->createDatabaseIfNotExists();
+    $this->db = new PDO('mysql:host=' . MYSQL_HOST . ';dbname=' . MYSQL_DB . ';charset=utf8', MYSQL_USER, MYSQL_PASS);
+    $this->hash = '$2y$10$yHQ/gMTE7Rt3R89dJvX75.X8JVx2EUPAlspKl8dTH.t75t4aTqTru';
     $this->deploy();
   }
 
+  
+  private function createDatabaseIfNotExists()
+  {
+    $pdo = new PDO('mysql:host=' . MYSQL_HOST, MYSQL_USER, MYSQL_PASS);
+    $pdo->exec('CREATE DATABASE IF NOT EXISTS ' . MYSQL_DB);
+  }
 
   public function deploy()
   {
@@ -105,7 +114,7 @@ class Model
                 --
                 
                 INSERT INTO `usuario` (`id_usuario`, `nombre`, `email`, `password`, `rol`) VALUES
-                (2, 'webadmin', 'webadmin@correo.com', '{}', 1);
+                (2, 'webadmin', 'webadmin@correo.com', '{$this->hash}', 1);
                 
                 --
                 -- Índices para tablas volcadas
@@ -161,6 +170,34 @@ class Model
                 --
                 ALTER TABLE `noticias`
                   ADD CONSTRAINT `noticias_ibfk_1` FOREIGN KEY (`id_seccion`) REFERENCES `seccion` (`id_seccion`);
+
+                  CREATE TABLE `comentarios` (
+                    `id` int(11) NOT NULL,
+                    `contenido` text NOT NULL,
+                    `id_noticia` int(11) NOT NULL
+                  ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+                  
+                  --
+                  -- Índices para tablas volcadas
+                  --
+                  
+                  --
+                  -- Indices de la tabla `comentarios`
+                  --
+                  ALTER TABLE `comentarios`
+                    ADD PRIMARY KEY (`id`),
+                    ADD KEY `CLAVE FORANEA` (`id_noticia`);
+                  
+                  --
+                  -- AUTO_INCREMENT de las tablas volcadas
+                  --
+                  
+                  --
+                  -- AUTO_INCREMENT de la tabla `comentarios`
+                  --
+                  ALTER TABLE `comentarios`
+                    MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+                  
                 COMMIT;
                 END;
       $this->db->query($sql);
