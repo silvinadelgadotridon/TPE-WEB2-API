@@ -1,16 +1,18 @@
 <?php
 require_once 'app/controller/api.controller.php';
 require_once 'app/model/news.api.model.php';
-
+require_once 'app/helper/api.helper.php';
 class NewsApiController extends ApiController
 {
     private $model;
+    private $helper;
 
     function __construct()
     {
         parent::__construct();
         $this->model = new NewsApiModel();
         $this->view = new ApiView();
+        $this->helper = new AuthHelper();
     }
 
         function getAll($params = null) {
@@ -32,12 +34,12 @@ class NewsApiController extends ApiController
                 } else {
                 $this->view->response("No se encontraron noticias.", 204);
                 $this->view->response("Puede realizar una nueva busqueda.", 205);
-                }
-            } catch (Exception $e) {
-                $this->view->response($e->getMessage(), 500);
-            } 
-           
+                return;
+            }
+        } catch (Exception $e) {
+            $this->view->response($e->getMessage(), 500);
         }
+    }
 
     public function get($params = null)
     {
@@ -49,6 +51,7 @@ class NewsApiController extends ApiController
             $this->view->response($news, 200);
         else {
             $this->view->response("La noticia solicitada con id= $id no existe", 404);
+            return;
         }
     }
 
@@ -56,26 +59,46 @@ class NewsApiController extends ApiController
 
     public function createNews($params = null)
     {
+        # Verificacion de usuario, permisos para hacer POST
+        $user = $this->helper->currentUser();
+        if (!$user) {
+            $this->view->response("Unauthorized", 401);
+            return;
+        }
+
+        if ($user->rol != "1") {
+            $this->view->response("Forbidden", 403);
+            return;
+        }
+
         $news = $this->getData();
 
 
         if (empty($news->titulo) || empty($news->contenido) || empty($news->fecha) || empty($news->hora) || empty($news->id_seccion)) {
             $this->view->response("Debe completar todos los datos", 400);
+            return;
         } else {
 
-            if (empty($this->model->getNewsById($news->id))) {
-                $this->model->insertNews($news->titulo, $news->contenido, $news->fecha, $news->hora, $news->id_seccion);
-                $added = $this->model->getNewsById($news->id);
-                $this->view->response($added, 201);
-            } else {
-                $this->view->response("La noticia ya se encuentra ingresada", 400);
-            }
+            $id = $this->model->insertNews($news->titulo, $news->contenido, $news->fecha, $news->hora, $news->id_seccion);
+            $this->view->response($id, 201);
         }
     }
 
 
     function update($params = [])
     {
+        # Verificacion de usuario, permisos para hacer POST
+        $user = $this->helper->currentUser();
+        if (!$user) {
+            $this->view->response("Unauthorized", 401);
+            return;
+        }
+
+        if ($user->rol != "1") {
+            $this->view->response("Forbidden", 403);
+            return;
+        }
+
         $id = $params[':ID'];
         $news = $this->model->getNewsById($id);
 
@@ -91,8 +114,7 @@ class NewsApiController extends ApiController
             $this->view->response('La noticia ha sido actualizada. Número de id=' . $id, 200);
         } else {
             $this->view->response('La noticia no existe.', 404);
+            return;
         }
     }
-
-
 }
