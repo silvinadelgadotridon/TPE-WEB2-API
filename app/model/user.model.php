@@ -11,6 +11,7 @@ class UserModel extends Model{
           $query = $this -> db -> prepare('SELECT * FROM usuario WHERE nombre = ?');
           $query -> execute([$username]);
 
-          return $query -> fetch(PDO::FETCH_OBJ);
+          $user = $query -> fetch(PDO::FETCH_OBJ);
+          return $user;
      }
 }

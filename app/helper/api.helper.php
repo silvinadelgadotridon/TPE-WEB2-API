@@ -21,7 +21,7 @@ class AuthHelper {
     function createToken($payload){
         $header = array(
             "alg" => "HS256", 
-            "typ" => "JWT" #token tipo json
+            "typ" => "JWT" //token tipo json
         );
 
         # Determina el tiempo de vencimiento del token
@@ -32,7 +32,7 @@ class AuthHelper {
         $payload = base64url_encode(json_encode($payload));
 
         # Se crea el secreto con el que se firma el token
-        $signature = hash_hmac('SHA256', '$header.$payload', JWT_KEY, true);
+        $signature = hash_hmac('SHA256', "$header.$payload", JWT_KEY, true);
         $signature = base64url_encode($signature);
 
         # Creacion del token concatenando header, payload y firma
@@ -42,37 +42,38 @@ class AuthHelper {
     }
 
     function verify($token){
-        # header.payload.signature
-
-        # Se almacena en un array [header, payload, signature]
-        $token = explode(".", $token);
-
-        # Desglose del token
-        $header = $token[0];
-        $payload = $token[1];
-        $signature = $token[2];
-
-        # Se vuelve a firmar el token 
+        $tokenParts = explode(".", $token);
+    
+        if (count($tokenParts) !== 3) {
+            // Error si el token no tiene el formato correcto
+            return false;
+        }
+    
+        list($header, $payload, $signature) = $tokenParts;
+    
         $newSignature = hash_hmac("SHA256", "$header.$payload", JWT_KEY, true);
-        $newSignature = base64url_encode(json_encode($newSignature));
-
-        # Se verifica si la nueva firma es igual a la anterior
-        if($signature != $newSignature){
+        $newSignature = base64url_encode($newSignature);
+    
+        if (!hash_equals($newSignature, $signature)) {
+            // Error si las firmas no coinciden
             return false;
         }
-
-        # Decodificacion del payload del token
-        $payload = json_decode(base64_decode($payload));
-
-        # Verificacion del tiempo de vencimiento del token
-        if($payload->exp < time()){
+    
+        $decodedPayload = json_decode(base64_decode($payload));
+    
+        if ($decodedPayload === null) {
+            // Error al decodificar el payload
             return false;
         }
-        
-
-        return $payload;
+    
+        if ($decodedPayload->exp < time()) {
+            // Error si el token ha expirado
+            return false;
+        }
+    
+        return $decodedPayload;
     }
-
+    
     function currentUser(){
 
         # Devuelve bearer $token

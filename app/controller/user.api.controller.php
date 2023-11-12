@@ -36,7 +36,7 @@ class UserApiController extends ApiController {
         }
 
         # Decodificacion
-        $userpass = base64_decode($basic[0]);
+        $userpass = base64_decode($basic[1]);
         # Desglose de user y pass
         $userpass = explode(":", $userpass);
 
@@ -44,17 +44,20 @@ class UserApiController extends ApiController {
         $user = $userpass[0];
         $pass = $userpass[1];
 
+
         # Datos del usuarios traidos de la base de datos
         $userdata = $this->model->get_user_by_username($user);
         //$userdata = [ "name" => $user, "id" => 123, "role" => 'ADMIN' ]; // Llamar a la DB
 
-        if($user == "Nico" && $pass == "web") {
+        if($user == $userdata->nombre && password_verify($pass, $userdata->password)) {
             // Usuario es válido
+            $userdataObject = json_decode(json_encode($userdata), true);
             
-            $token = $this->helper->createToken($userdata);
-            $this->view->response($token);
+            $token = $this->helper->createToken($userdataObject);
+            $this->view->response($token, 200);
         } else {
             $this->view->response('El usuario o contraseña son incorrectos.', 401);
+            return;
         }
 
     }
