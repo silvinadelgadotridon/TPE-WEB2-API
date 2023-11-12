@@ -33,6 +33,7 @@ class NewsApiController extends ApiController
             } else {
                 $this->view->response("No se encontraron noticias.", 204);
                 $this->view->response("Puede realizar una nueva busqueda.", 205);
+                return;
             }
         } catch (Exception $e) {
             $this->view->response($e->getMessage(), 500);
@@ -49,6 +50,7 @@ class NewsApiController extends ApiController
             $this->view->response($news, 200);
         else {
             $this->view->response("La noticia solicitada con id= $id no existe", 404);
+            return;
         }
     }
 
@@ -69,6 +71,7 @@ class NewsApiController extends ApiController
                 $this->view->response($added, 201);
             } else {
                 $this->view->response("La noticia ya se encuentra ingresada", 400);
+                return;
             }
         }
     }
@@ -91,6 +94,7 @@ class NewsApiController extends ApiController
             $this->view->response('La noticia ha sido actualizada. Número de id=' . $id, 200);
         } else {
             $this->view->response('La noticia no existe.', 404);
+            return;
         }
     }
 

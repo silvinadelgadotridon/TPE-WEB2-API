@@ -22,6 +22,7 @@ class CommentsApiController extends ApiController
             $this->view->response('Comentario insertado correctamente', 201);
         } else {
             $this->view->response('Faltan campos por completar', 400);
+            return;
         }
     }
 
