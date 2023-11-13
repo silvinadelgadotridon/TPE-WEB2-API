@@ -3,14 +3,14 @@
 ------------  
 
 ## Integrantes: 
-*Delgado, Silvina Bibiana (silvinadelgadotridon@gmail.com)  
-Diaz, Diego Saúl (sauldiazdiegodiaz@gmail.com)  *
+*Delgado, Silvina Bibiana (silvinadelgadotridon@gmail.com)*
+*Diaz, Diego Saúl (sauldiazdiegodiaz@gmail.com)*  
 
 ## Temática del TPE
 Portal de noticias  
 
 ## Descripción 
-Se generó un servicio que permite consultar, agregar y editar diferentes registros de la base de datos db_diario. Asimismo, es posible realizar consultas filtrando por diversos campos, con posibilidad de realizar un paginado y un ordenamiento de forma ascendente o descendente.
+Se generó un servicio que permite consultar, agregar y editar diferentes registros de la base de datos db_diario. Asimismo, es posible realizar consultas filtrando por diversos campos, con posibilidad de realizar un paginado y un ordenamiento de forma ascendente o descendente. 
 
 ## API 
 La API es RESTful y utiliza el protocolo de transferencia de hipertexto (HTTP), con formato de transferencia JSON. 
@@ -25,16 +25,16 @@ La API es RESTful y utiliza el protocolo de transferencia de hipertexto (HTTP), 
 | Crear comentario   | POST   | http://localhost/TPE-WEB2-API/api/comentarios | 201    |
 | Obtener token      | GET    | http://localhost/TPE-WEB2-API/api/user/token  | 200    | 
 
-[========]
 
+---
 
-#### Listar noticias 
+#### *Listar noticias* 
 Retorna la lista de todas las noticias de la base de datos. 
 
-#### Obtener noticia 
+#### *Obtener noticia* 
 Devuelve una única noticia con el id indicado. 
 
-#### Crear noticia 
+#### *Crear noticia* 
 Agrega una nueva noticia y la almacena en la base de datos. Para cargar los datos, se utiliza una salida en formato JSON escribiendo en el body de la solicitud. 
 - **Ejemplo:**  
 ```json
@@ -47,10 +47,10 @@ Agrega una nueva noticia y la almacena en la base de datos. Para cargar los dato
     "id_seccion": 7
 }
 ```
-#### Editar noticia 
+#### *Editar noticia* 
 Edita una nueva noticia y la almacena en la base de datos. Para cargar los datos, se utiliza una salida en formato JSON escribiendo en el body de la solicitud. 
 
-- **Ejemplo: ** 
+- **Ejemplo:** 
 ```json
 {
     "id": 29,
@@ -62,16 +62,16 @@ Edita una nueva noticia y la almacena en la base de datos. Para cargar los datos
 }
 ```
 
-#### Crear comentario 
+#### *Crear comentario* 
 Agrega un nuevo comentario y lo almacena en la base de datos. Para cargar los datos, se utiliza una salida en formato JSON escribiendo en el body de la solicitud. 
-- **Ejemplo: **
+- **Ejemplo:** 
 ```json
  {
      "contenido":"Nuevo comentario",
      "id_noticia":29   
     }
 ```
-#### Obtener token 
+#### *Obtener token* 
 Dentro de la plataforma Postman, en la pestaña "Authorization", seleccionar la opción Type-> Basic Auth y colocar el usuario y contraseña: 
 
 
@@ -84,7 +84,7 @@ Dentro de la plataforma Postman, en la pestaña "Authorization", seleccionar la 
 Al enviar la consulta utilizando GET, se generan los token. 
 Luego de generar un token, se deberá copiar y pegar  en la ventana "Authorization", Type->Bearer Token. Para el caso del administrador, se autorizan las acciones de agregar y modificar noticias.
 
-[========]
+---
 
 
 ### Parámetros 
