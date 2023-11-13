@@ -33,7 +33,6 @@ class NewsApiController extends ApiController
                 $this->view->response($newss, 200);
                 } else {
                 $this->view->response("No se encontraron noticias.", 204);
-                $this->view->response("Puede realizar una nueva busqueda.", 205);
                 return;
             }
         } catch (Exception $e) {
@@ -78,9 +77,8 @@ class NewsApiController extends ApiController
             $this->view->response("Debe completar todos los datos", 400);
             return;
         } else {
-
-            $id = $this->model->insertNews($news->titulo, $news->contenido, $news->fecha, $news->hora, $news->id_seccion);
-            $this->view->response($id, 201);
+            $this->model->insertNews($news->titulo, $news->contenido, $news->fecha, $news->hora, $news->id_seccion);
+            $this->view->response("Noticia creada correctamente", 201);
         }
     }
 

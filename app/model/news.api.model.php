@@ -17,7 +17,6 @@ class NewsApiModel extends Model{
         $querySentence = "SELECT * FROM noticias ";
 
         if ($column != null) {
-            //aca tengo que ver si el $filter
             $querySentence .= " WHERE  $column LIKE ? ";
             array_push($params, "$filtervalue%");
         }

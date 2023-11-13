@@ -10,6 +10,7 @@ class CommentsApiModel extends Model{
     public function createComment($comment, $id) {
         $query = $this->db->prepare('INSERT INTO comentarios(contenido, id_noticia) VALUES(?,?)');
         $query->execute([$comment, $id]);
+        return $this->db->lastInsertId();
     }
 
 }
