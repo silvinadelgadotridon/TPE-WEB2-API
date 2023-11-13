@@ -64,7 +64,7 @@ Edita una nueva noticia y la almacena en la base de datos. Para cargar los datos
 
 #### *Crear comentario* 
 Agrega un nuevo comentario y lo almacena en la base de datos. Para cargar los datos, se utiliza una salida en formato JSON escribiendo en el body de la solicitud. 
-- **Ejemplo:** 
+- **Ejemplo:**
 ```json
  {
      "contenido":"Nuevo comentario",
@@ -83,6 +83,7 @@ Dentro de la plataforma Postman, en la pestaña "Authorization", seleccionar la 
 
 Al enviar la consulta utilizando GET, se generan los token. 
 Luego de generar un token, se deberá copiar y pegar  en la ventana "Authorization", Type->Bearer Token. Para el caso del administrador, se autorizan las acciones de agregar y modificar noticias.
+
 
 ---
 
